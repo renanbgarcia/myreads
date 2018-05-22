@@ -1,11 +1,13 @@
 import React from 'react'
 import './App.css'
 import ShelfControl from './ShelfControl'
+import Search from './Search'
+import { search } from './BooksAPI';
 
-class ShelfRead extends React.Component {
+class SearchResult extends React.Component {
+
     render() {
-        const match = new RegExp("read")
-        let booksToSHow = this.props.books.filter((book) => match.test(book.shelf))
+        console.log(typeof this.props.books)
         let booksToSHow = []
         if (typeof this.props.books === 'object') {
             booksToSHow = this.props.books
@@ -28,4 +30,4 @@ class ShelfRead extends React.Component {
     }
 }
 
-export default ShelfRead
+export default SearchResult

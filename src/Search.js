@@ -2,19 +2,15 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 // import { Route } from 'react-router-dom'
 import * as BooksAPI from './BooksAPI'
+import SearchResult from './SearchResult'
+import Shelves from './Shelves'
 import './App.css'
 
 class Search extends React.Component {
     state = {
       inputValue: '',
-      searchedBooks: ''
+      searchedBooks: []
     }
-
-    // componentWillReceiveProps() {
-    //   console.log(this.state.inputValue)
-    //   BooksAPI.search(this.state.inputValue).then((books) => this.setState({searchedBooks: books}))
-    //   console.log(this.state.searchedBooks)
-    // }
 
     updateInput(e) {
       this.setState({ inputValue: e.target.value })
@@ -24,8 +20,6 @@ class Search extends React.Component {
     }
 
     render() {
-      // console.log(this.state.inputValue)
-      // console.log(this.state.searchedBooks)
         return (
             <div className="search-books">
             <div className="search-books-bar">
@@ -44,7 +38,7 @@ class Search extends React.Component {
               </div>
             </div>
             <div className="search-books-results">
-              <ol className="books-grid"></ol>
+              <ol className="books-grid"><SearchResult books={this.state.searchedBooks} action={this.props.action}/></ol>
             </div>
           </div>
         )

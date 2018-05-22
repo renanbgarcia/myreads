@@ -4,11 +4,15 @@ import ShelfControl from './ShelfControl'
 
 class ShelfWants extends React.Component {
     render() {
-        const match = new RegExp("wantToRead")
-        let showingBooks = this.props.books.filter((book) => match.test(book.shelf))
+        // const match = new RegExp("wantToRead")
+        // let showingBooks = this.props.books.filter((book) => match.test(book.shelf))
+        let booksToSHow = []
+        if (typeof this.props.books === 'object') {
+            booksToSHow = this.props.books
+        }
         return (
                 <ol className="books-grid">
-                {showingBooks.map((book) =>
+                {booksToSHow.map((book) =>
                     <li key={book.id}>
                     <div className="book" >
                     <div className="book-top">
