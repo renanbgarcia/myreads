@@ -12,11 +12,15 @@ class Search extends React.Component {
       searchedBooks: []
     }
 
-    updateInput(e) {
-      this.setState({ inputValue: e.target.value })
-      BooksAPI.search(this.state.inputValue).then((books) => this.setState({searchedBooks: books}))
-      console.log(this.state.inputValue)
-      console.log(this.state.searchedBooks)
+    doSearch(e) {
+      BooksAPI.search(e.target.value).then((books) => this.setState({searchedBooks: books}))
+      this.setState({inputValue: e.target.value})
+    }
+
+    ShowList() {
+      if (typeof this.state.searchedBooks !== 'undefined' && !this.state.searchedBooks.hasOwnProperty('error') && this.state.inputValue !== ' ') {
+        return (<SearchResult books={this.state.searchedBooks} shelfbooks={this.props.books} action={this.props.action}/>)
+      }
     }
 
     render() {
@@ -25,20 +29,11 @@ class Search extends React.Component {
             <div className="search-books-bar">
               <Link to='/' className="close-search" >Close</Link>
               <div className="search-books-input-wrapper">
-                {/*
-                  NOTES: The search from BooksAPI is limited to a particular set of search terms.
-                  You can find these search terms here:
-                  https://github.com/udacity/reactnd-project-myreads-starter/blob/master/SEARCH_TERMS.md
-
-                  However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
-                  you don't find a specific author or title. Every search is limited by search terms.
-                */}
-                <input type="text" placeholder="Search by title or author" onChange={(e) => this.updateInput(e)}/>
-
+                <input type="text" placeholder="Search by title or author" onChange={(e) => this.doSearch(e)}/>
               </div>
             </div>
             <div className="search-books-results">
-              <ol className="books-grid"><SearchResult books={this.state.searchedBooks} action={this.props.action}/></ol>
+              <ol className="books-grid">{this.ShowList()}</ol>
             </div>
           </div>
         )

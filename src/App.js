@@ -8,28 +8,20 @@ import Shelves from './Shelves'
 
 class BooksApp extends React.Component {
 
-  constructor(props) {
-    super(props)
+  constructor() {
+    super()
     this.moveToShelf = this.moveToShelf.bind(this)
+    this.addBook = this.addBook.bind(this)
   }
 
   state = {
     books: []
-    /**
-     * TODO: Instead of using this state variable to keep track of which page
-     * we're on, use the URL in the browser's address bar. This will ensure that
-     * users can use the browser's back and forward buttons to navigate between
-     * pages, as well as provide a good URL they can bookmark and share.
-     */
-    // showSearchPage: false
   }
 
+  // Chamado pelos controles da página principal para mudar o livro de prateleira
   moveToShelf(key, e) {
-    console.log(e)
     let newstate = this.state.books.map(function (book) {
-      console.log(book.id)
-      console.log(key)
-      if (book.id == key) {
+      if (book.id === key) {
         book.shelf = e.target.value;
         BooksAPI.update(book, e.target.value)
         return book
@@ -37,11 +29,22 @@ class BooksApp extends React.Component {
         return book
       }
     })
-    console.log(newstate)
-    console.log(this.state)
-    this.setState({
-      books: newstate
-    })
+    for (let [key, book] of Object.entries(this.state.books)) {
+      if (book.shelf === 'none') {
+        newstate = this.state.books.splice(key, 1)
+      }
+    }
+    this.setState(this.state)
+  }
+
+  //Chamado na página de busca para adicionar um livro à pagina principal
+  addBook(key, e, book) {
+    book.shelf = e.target.value
+    let shelfIds = this.state.books.map((book) => book.id)
+      if(!shelfIds.includes(key)) {
+        this.state.books.push(book)
+      }
+    BooksAPI.update(book, e.target.value)
   }
 
   componentWillMount() {
@@ -52,9 +55,9 @@ class BooksApp extends React.Component {
 
   render() {
     return (
-      <div className="app">
-        <Route exact path='/' component={Shelves} books={this.state.books} action={this.moveToShelf}/>
-        <Route exact path='/Search' component={Search} books={this.state.books} action={this.moveToShelf}/>
+      <div className="app"> 
+        <Route exact path='/' render={() => <Shelves books={this.state.books} action={this.moveToShelf} /> }/>
+        <Route exact path='/Search' render={() => <Search action={this.addBook} books={this.state.books} />}/>
       </div>
     )
   }
